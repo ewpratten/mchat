@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "mchat"
+version = "0.1.0"
+description = "A console chat client for most Minecraft server versions"
+authors = ["Evan Pratten <ewpratten@gmail.com>"]
+license = "GPLv3"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+rich = "^9.3.0"
+pycraft = {git = "https://github.com/ammaraskar/pyCraft.git"}
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
