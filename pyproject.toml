@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A console chat client for most Minecraft server versions"
 authors = ["Evan Pratten <ewpratten@gmail.com>"]
 license = "GPLv3"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
