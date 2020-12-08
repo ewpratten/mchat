@@ -8,9 +8,9 @@ license = "GPLv3"
 [tool.poetry.dependencies]
 python = "^3.9"
 rich = "^9.3.0"
-pycraft = {git = "https://github.com/ammaraskar/pyCraft.git"}
 
 [tool.poetry.dev-dependencies]
+pycraft = {git = "https://github.com/ammaraskar/pyCraft.git"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
