@@ -18,6 +18,48 @@ install()
 console = Console()
 
 
+def parseJSONPayolad(obj: dict) -> str:
+
+    # Handle datatype edge case
+    if type(obj) == str:
+        obj = {"text": obj}
+
+    # Get the color
+    color: str = obj.get("color", "white")
+
+    # Get formatting extras
+    bold: bool = obj.get("bold", False)
+    italic: bool = obj.get("italic", False)
+    underlined: bool = obj.get("underlined", False)
+    strikethrough: bool = obj.get("strikethrough", False)
+    obfuscated: bool = obj.get("obfuscated", False)
+
+    # Get the actual text
+    text: str = obj.get("text", "")
+
+    # Build tags list
+    tags = []
+
+    if bold:
+        tags.append("bold")
+    if italic:
+        tags.append("italic")
+    if underlined:
+        tags.append("underline")
+    if strikethrough:
+        tags.append("strike")
+
+    # Add a final seperator
+    if len(tags) > 0:
+        tags.append(" ")
+
+    # Build closing tags block
+    closing_block = "[/]" if len(tags) else ""
+
+    # Handle formatting
+    return "[{tags}{color}]{text}{closing_block}".format(tags=" ".join(tags), color=color, text=text, closing_block=closing_block)
+
+
 def incomingChatHandler(packet):
 
     # Deserialize JSON data
@@ -27,47 +69,18 @@ def incomingChatHandler(packet):
     else:
         packet_json = packet.json_data
 
+    # console.print(packet_json)
+
     # String segments
     str_segs = []
 
     # Handle every line of "extras"
-    for extra in packet_json["extra"]:
-
-        # Get the color
-        color: str = extra.get("color", "white")
-
-        # Get formatting extras
-        bold: bool = extra.get("bold", False)
-        italic: bool = extra.get("italic", False)
-        underlined: bool = extra.get("underlined", False)
-        strikethrough: bool = extra.get("strikethrough", False)
-        obfuscated: bool = extra.get("obfuscated", False)
-
-        # Get the actual text
-        text: str = extra.get("text", "")
-
-        # Build tags list
-        tags = []
-
-        if bold:
-            tags.append("bold")
-        if italic:
-            tags.append("italic")
-        if underlined:
-            tags.append("underline")
-        if strikethrough:
-            tags.append("strike")
-
-        # Add a final seperator
-        if len(tags) > 0:
-            tags.append(" ")
-
-        # Build closing tags block
-        closing_block = "[/]" if len(tags) else ""
-
-        # Handle formatting
-        str_segs.append(
-            "[{tags}{color}]{text}{closing_block}".format(tags=" ".join(tags), color=color, text=text, closing_block=closing_block))
+    if "extra" in packet_json:
+        for extra in packet_json["extra"]:
+            str_segs.append(parseJSONPayolad(extra))
+    if "with" in packet_json:
+        for data in packet_json["with"]:
+            str_segs.append(parseJSONPayolad(data))
 
     # Build the chat line
     chat_line = " ".join(str_segs)
@@ -120,7 +133,7 @@ def main() -> int:
 
     # Open a connection
     server_connection = Connection(
-        args.server_address, args.port, auth_token, allowed_versions=[args.version])
+        args.server_address, args.port, auth_token, allowed_versions=[protocol_version_num])
 
     try:
         server_connection.connect()
@@ -148,7 +161,7 @@ def main() -> int:
             server_connection.write_packet(packet)
 
     except KeyboardInterrupt as e:
-        print("\rGoodbye.", end="")
+        print("\rGoodbye")
 
     return 0
 
