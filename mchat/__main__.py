@@ -12,7 +12,7 @@ from minecraft import SUPPORTED_MINECRAFT_VERSIONS
 import getpass
 import json
 import socket
-
+from os import system
 # Pretty-print console object
 install()
 console = Console()
@@ -156,8 +156,9 @@ def main() -> int:
         while True:
 
             # Get a line from the user
-            chat_message = console.input("> ")
-
+            chat_message = console.input()
+            if chat_message = "clear":
+                system('cls' if name == 'nt' else 'clear')
             # Send the chat message
             packet = serverbound.play.ChatPacket()
             packet.message = chat_message
