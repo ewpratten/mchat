@@ -133,9 +133,12 @@ def main() -> int:
             return 1
 
     # Open a connection
-    server_connection = Connection(
-        args.server_address, args.port, auth_token, allowed_versions=[protocol_version_num])
-
+    
+        server_connection = Connection(
+            args.server_address, args.port, auth_token, allowed_versions=[protocol_version_num])
+    else:
+        server_connection = Connection(
+            args.server_address, args.port, username=username, allowed_versions=[protocol_version_num])
     try:
         server_connection.connect()
     except:
