@@ -70,7 +70,7 @@ def incomingChatHandler(packet):
         packet_json = packet.json_data
 
     # console.print(packet_json)
-
+ 
     # String segments
     str_segs = []
 
