@@ -120,16 +120,17 @@ def main() -> int:
     protocol_version_num = SUPPORTED_MINECRAFT_VERSIONS[args.version]
     console.print(
         f"[bright_black]Selecting protocol version {protocol_version_num}")
+    auth_token = None
+    if password:
+        # Authenticate with Mojang
+        auth_token = AuthenticationToken()
+        console.print(f"[bright_black]Contacting Yggdrasil...")
 
-    # Authenticate with Mojang
-    auth_token = AuthenticationToken()
-    console.print(f"[bright_black]Contacting Yggdrasil...")
-
-    try:
-        auth_token.authenticate(username, password)
-    except YggdrasilError as e:
-        console.print(f"[bold red]Failed to authenticate Minecraft session")
-        return 1
+        try:
+            auth_token.authenticate(username, password)
+        except YggdrasilError as e:
+            console.print(f"[bold red]Failed to authenticate Minecraft session")
+            return 1
 
     # Open a connection
     server_connection = Connection(
