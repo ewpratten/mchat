@@ -160,7 +160,7 @@ def main() -> int:
             if chat_message == "clear":
                 try:
                     console.clear()
-                else: system('cls')
+                except: system('cls')
             # Send the chat message
             packet = serverbound.play.ChatPacket()
             packet.message = chat_message
