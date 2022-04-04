@@ -120,7 +120,6 @@ def main() -> int:
     protocol_version_num = SUPPORTED_MINECRAFT_VERSIONS[args.version]
     console.print(
         f"[bright_black]Selecting protocol version {protocol_version_num}")
-    auth_token = None
     if password:
         # Authenticate with Mojang
         auth_token = AuthenticationToken()
@@ -157,7 +156,7 @@ def main() -> int:
         while True:
 
             # Get a line from the user
-            chat_message = console.input()
+            chat_message = console.input("> ")
 
             # Send the chat message
             packet = serverbound.play.ChatPacket()
