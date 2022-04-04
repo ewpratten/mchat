@@ -157,7 +157,7 @@ def main() -> int:
 
             # Get a line from the user
             chat_message = console.input()
-            if chat_message = "clear":
+            if chat_message == "clear":
                 system('cls' if name == 'nt' else 'clear')
             # Send the chat message
             packet = serverbound.play.ChatPacket()
