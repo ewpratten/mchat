@@ -12,7 +12,7 @@ from minecraft import SUPPORTED_MINECRAFT_VERSIONS
 import getpass
 import json
 import socket
-
+from os import system
 # Pretty-print console object
 install()
 console = Console()
@@ -70,7 +70,7 @@ def incomingChatHandler(packet):
         packet_json = packet.json_data
 
     # console.print(packet_json)
-
+ 
     # String segments
     str_segs = []
 
@@ -120,21 +120,24 @@ def main() -> int:
     protocol_version_num = SUPPORTED_MINECRAFT_VERSIONS[args.version]
     console.print(
         f"[bright_black]Selecting protocol version {protocol_version_num}")
+    if password:
+        # Authenticate with Mojang
+        auth_token = AuthenticationToken()
+        console.print(f"[bright_black]Contacting Yggdrasil...")
 
-    # Authenticate with Mojang
-    auth_token = AuthenticationToken()
-    console.print(f"[bright_black]Contacting Yggdrasil...")
-
-    try:
-        auth_token.authenticate(username, password)
-    except YggdrasilError as e:
-        console.print(f"[bold red]Failed to authenticate Minecraft session")
-        return 1
+        try:
+            auth_token.authenticate(username, password)
+        except YggdrasilError as e:
+            console.print(f"[bold red]Failed to authenticate Minecraft session")
+            return 1
 
     # Open a connection
-    server_connection = Connection(
-        args.server_address, args.port, auth_token, allowed_versions=[protocol_version_num])
-
+    
+        server_connection = Connection(
+            args.server_address, args.port, auth_token, allowed_versions=[protocol_version_num])
+    else:
+        server_connection = Connection(
+            args.server_address, args.port, username=username, allowed_versions=[protocol_version_num])
     try:
         server_connection.connect()
     except:
@@ -154,7 +157,10 @@ def main() -> int:
 
             # Get a line from the user
             chat_message = console.input()
-
+            if chat_message == "clear":
+                try:
+                    console.clear()
+                except: system('cls')
             # Send the chat message
             packet = serverbound.play.ChatPacket()
             packet.message = chat_message
